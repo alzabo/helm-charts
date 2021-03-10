@@ -1,0 +1,20 @@
+{{- if .Values.persistence.volumeClaim.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "syncthing.fullname" . }}
+  labels:
+    {{- include "syncthing.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.persistence.volumeClaim.storageClass }}
+  storageClassName: {{ .Values.persistence.volumeClaim.storageClass | quote }}
+  {{- else }}
+  storageClassName: {{ include "syncthing.fullname" . }}
+  {{- end }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.volumeClaim.size | quote }}
+  volumeName: {{ include "syncthing.fullname" . }}
+{{- end }}
