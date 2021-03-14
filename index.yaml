@@ -3,13 +3,13 @@ entries:
   syncthing:
   - apiVersion: v2
     appVersion: 1.13.1
-    created: "2021-03-14T07:52:20.524469767Z"
+    created: "2021-03-14T07:53:29.90736131Z"
     description: A Helm chart for Syncthing in Kubernetes
     digest: 890f8c547883135ce4c88f437619f3edb46a0aa5a5394e85cbf97ddbd7aad527
     icon: https://syncthing.net/img/logo-horizontal.svg
     name: syncthing
     type: application
     urls:
-    - syncthing-0.6.0.tgz
+    - https://github.com/alzabo/helm-charts/releases/download/syncthing-0.6.0/syncthing-0.6.0.tgz
     version: 0.6.0
-generated: "2021-03-14T07:52:20.523687382Z"
+generated: "2021-03-14T07:53:29.907368828Z"
