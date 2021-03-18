@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  pihole-ha:
+  - apiVersion: v2
+    appVersion: v5.6
+    created: "2021-03-18T02:59:41.22662568Z"
+    description: pihole chart w/ HA via pihole-sync
+    digest: ce570172e2295e78a506e38ac2eba0c28dbf465ba3712f4ec613aaa48d1bda38
+    name: pihole-ha
+    type: application
+    urls:
+    - https://github.com/alzabo/helm-charts/releases/download/pihole-ha-0.1.1/pihole-ha-0.1.1.tgz
+    version: 0.1.1
   syncthing:
   - apiVersion: v2
     appVersion: 1.13.1
@@ -12,4 +23,4 @@ entries:
     urls:
     - https://github.com/alzabo/helm-charts/releases/download/syncthing-0.6.0/syncthing-0.6.0.tgz
     version: 0.6.0
-generated: "2021-03-14T07:53:29.907368828Z"
+generated: "2021-03-18T02:59:41.22663379Z"
