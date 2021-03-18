@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "pihole-ha.fullname" . }}
+  labels:
+    {{- include "pihole-ha.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  serviceName: {{ include "pihole-ha.fullname" . }}-tcp
+  selector:
+    matchLabels:
+      {{- include "pihole-ha.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "pihole-ha.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "pihole-ha.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: pihole
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
+            - name: dns-udp
+              containerPort: 53
+              protocol: UDP
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ include "pihole-ha.fullname" . }}
+          env:
+            - name: PIHOLE_PRIMARY_HOST
+              value: {{ include "pihole-ha.fullname" . }}-0.{{ include "pihole-ha.fullname" . }}-tcp
+            - name: GRAVITY_SSH_KEY
+              value: /root/ssh_keys/id_rsa
+            - name: GRAVITY_SSH_PUBKEY
+              value: /root/ssh_keys/id_rsa.pub
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: pihole
+              mountPath: /etc/pihole
+            - name: ssh
+              mountPath: /root/ssh_keys
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - name: ssh
+        secret:
+          secretName: {{ .Values.existingSecret }}
+          defaultMode: 0o0400
+  volumeClaimTemplates:
+  - metadata:
+      name: pihole
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
