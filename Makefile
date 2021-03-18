@@ -8,7 +8,7 @@ package: $(DEST_DIR)
 	helm package $(CHART_DIR) -d $(DEST_DIR)
 
 upload:
-	cr upload -o alzabo -r helm-charts -t $(TOKEN) -p $(DEST_DIR)
+	cr upload -o alzabo -r helm-charts -t $${TOKEN} -p $(DEST_DIR)
 
 # the index recipe may not be entirely correct
 index:
