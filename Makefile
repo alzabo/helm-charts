@@ -20,3 +20,8 @@ release:
 index:
 	cr index -o alzabo -r helm-charts -c https://alzabo.github.io/helm-charts/ -i ./index.yaml -p $(DEST_DIR)
 
+update-index:
+	git checkout gh-pages
+	git checkout main -- index.yaml
+	git commit index.yaml -m 'update Helm metadata'
+	git push gh gh-pages
