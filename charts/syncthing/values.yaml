@@ -51,8 +51,13 @@ service:
     type: ClusterIP
     port: 80
     # loadBalancerIP:
+    annotations: {}
   backend:
     type: ClusterIP
+    annotations: {}
+  discovery:
+    type: ClusterIP
+    annotations: {}
 
 ingress:
   enabled: false

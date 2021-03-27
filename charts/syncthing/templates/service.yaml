@@ -4,6 +4,10 @@ metadata:
   name: {{ include "syncthing.fullname" . }}-web
   labels:
     {{- include "syncthing.labels" . | nindent 4 }}
+  {{- if .Values.service.web.annotations }}
+  annotations:
+    {{- toYaml .Values.service.web.annotations | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.web.type }}
   ports:
@@ -25,6 +29,10 @@ metadata:
   name: {{ include "syncthing.fullname" . }}-backend
   labels:
     {{- include "syncthing.labels" . | nindent 4 }}
+  {{- if .Values.service.backend.annotations }}
+  annotations:
+    {{- toYaml .Values.service.backend.annotations | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.backend.type }}
   ports:
@@ -45,6 +53,10 @@ metadata:
   name: {{ include "syncthing.fullname" . }}-discovery
   labels:
     {{- include "syncthing.labels" . | nindent 4 }}
+  {{- if .Values.service.discovery.annotations }}
+  annotations:
+    {{- toYaml .Values.service.discovery.annotations | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ .Values.service.discovery.type }}
   ports:
